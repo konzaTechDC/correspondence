@@ -1,0 +1,48 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+    <h2 class="title">Forward {{ file.title}} - {{ file.category }}</h2>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        
+        {% if form.errors %}
+        
+        {% for error in form.errors %}
+            <div class="notification is-danger">
+                {{ error }}
+            </div>
+        {% endfor %}
+                        
+        {% endif %}
+        
+        <div class="field">
+            <label for="receiver">Receiver</label>
+            <div class="control">
+                <div class="select">
+                    <select name="receiver_type" id="id_receiver_type">
+                        <option value="">Choose the document recepient..</option>
+                        <option value="manager">Manager</option>
+                        <option value="cm">Chief Manager</option>
+                        <option value="ceo">Office of CEO</option>
+                        <option value="stores">Stores</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+  
+        <div class="field">
+            <label for="comment">Comment</label>
+            <textarea name="comment" class="textarea" id="id_comment"></textarea>
+        </div>
+
+        <div class="field">
+            <div class="control">
+                <button class="button button is-success">Submit</button>
+            </div>
+        </div>
+    </form>
+{% endblock content %}
+    

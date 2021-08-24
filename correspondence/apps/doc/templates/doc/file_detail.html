@@ -1,0 +1,14 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+    <h1 class="title">{{ file.title }}</h1>
+
+    <p class="is-size-4">{{ object.file.url }}</p>
+
+    <p>{{ file.comment  }}</p>
+
+    <a href="{% url 'forward_file' file.id %}" class="button is-success">Forward</a>
+    
+{% endblock content %}
+    

@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+    <div class="container">
+        <div class="column is-6 is-offset-3">
+            <h1 class="title">Sign Up</h1>
+
+            <form action="" method="POST">
+                {% csrf_token %}
+                
+                {{ form.as_p }}
+                <hr>
+
+                <div class="field">
+                    <label for="account">Account Type</label>
+                    <div class="control">
+                        <div class="select">
+                            <select name="account_type" id="">
+                                <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                                <option value="cm">Chief Manager</option>
+                                <option value="ceo">Office of CEO</option>
+                                <option value="stores">Stores</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-success">Sign Up</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+    
