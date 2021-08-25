@@ -32,7 +32,7 @@
                     {% elif user.is_authenticated and userprofile.user == userprofile.manager %}
                         <a href="#" class="button is-success">Shared with me</a>
                     {% else %}
-                        <a href="{% url 'signup' %}" class="button is-success"><strong>Signup</strong></a> 
+                       <!-- <a href="#" class="button is-success"><strong>Signup</strong></a> -->
                         <a href="{% url 'login' %}" class="button is-light"><strong>Login</strong></a>
                     {% endif %}
                         

@@ -30,7 +30,8 @@ if ENV == 'dev':
     DEBUG = True
     ALLOWED_HOSTS = []
 else:
-   DEBUG = False
+  # DEBUG = False
+   DEBUG = True #for prod testing
    ALLOWED_HOSTS = ['correspondence.konza.ke', '41.76.175.221'] 
 
 # Application definition
