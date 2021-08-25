@@ -23,10 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-t^y_(es65p8d3tzxnox5#-on%(@q#_=o9tz$*))^4mj^-d7ls)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+ENV='dev'
 
-ALLOWED_HOSTS = []
-
+if ENV == 'dev':
+    DEBUG = True
+    ALLOWED_HOSTS = []
+else:
+   DEBUG = False
+   ALLOWED_HOSTS = ['correspondence.konza.ke', '41.76.175.221'] 
 
 # Application definition
 
@@ -43,6 +47,7 @@ INSTALLED_APPS = [
     'apps.userprofile',
     'apps.doc',
     'apps.notification',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [
@@ -77,18 +82,34 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'core.User'
 WSGI_APPLICATION = 'correspondence.wsgi.application'
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Development -> DB
+ENV='dev'
+
+if ENV == 'dev':
+    
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+   # Production -> DB 
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'OPTIONS': {
+            'read_default_file': '/etc/mysql/my.cnf',
+        },
+        }
+    }
 
 
 # Password validation

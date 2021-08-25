@@ -1,10 +1,10 @@
 from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DeleteView
+from django.views.generic import ListView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.doc.models import Document, ForwardFile, Category
 from apps.userprofile.models import  ConversationMessage
-from django.contrib.auth.models import User
+from apps.core.models import User
 
 @login_required
 def dashboard(request):
@@ -51,6 +51,21 @@ class FileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Document
     success_url = '/dashboard'
     template_name = 'userprofile/file_confirm_delete.html'
+
+    def test_func(self):
+        file = self.get_object()
+        if self.request.user == file.created_by:
+            return True
+        return False
+
+class FileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Document
+    template_name = 'userprofile/file_form.html'
+    fields = ['title', 'document', 'comment', 'category']
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
     def test_func(self):
         file = self.get_object()

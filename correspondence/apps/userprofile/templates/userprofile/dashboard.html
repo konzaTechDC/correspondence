@@ -92,8 +92,9 @@
                                     <div class="form-group mt-0 pt-0  m-2">    
                                     <a class="btn btn-outline-info  btn-d mr-5 "  href="{% url 'forward_file' file.id %}"  type="submit"><i class="fa fa-share-alt-square"></i></a>
                                     <a class="btn btn-outline-primary  btn-d "  href="{{ file.file.url }}"  download type="submit"><i class="fas fa-download"></i></a>
-                                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'file-delete' file.id %}"><i class="fa fa-trash" aria-hidden="true"></i>
-                                    </a>
+                                    <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'file-delete' file.id %}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                                    <a class="btn btn-success btn-sm mt-1 mb-1" href="{% url 'file-update' file.id %}">Update</a>
+                                    
                                 </div>
                             </div>
                             </div>

@@ -1,5 +1,6 @@
 from django.urls import path 
-from .views import dashboard, view_shared, manager_dashboard, UserFileListView, FileDeleteView
+from .views import (dashboard, view_shared, manager_dashboard,
+                     UserFileListView,FileUpdateView, FileDeleteView)
 
 urlpatterns = [
     path('', dashboard, name='dashboard'),
@@ -7,5 +8,5 @@ urlpatterns = [
     path('shared/<int:file_id>/', view_shared, name='view_shared'),
     path('user/<str:username>', UserFileListView.as_view(), name='user-files'),
     path('file/<int:pk>/delete/', FileDeleteView.as_view(), name='file-delete'),
-
+    path('file/<int:pk>/update/', FileUpdateView.as_view(), name='file-update'),
 ]
