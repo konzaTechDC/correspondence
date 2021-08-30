@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-t^y_(es65p8d3tzxnox5#-on%(@q#_=o9tz$*))^4mj^-d7ls)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ENV='prod'
-
+# ENV='prod'
+ENV = 'dev'
 if ENV == 'dev':
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -92,7 +92,9 @@ WSGI_APPLICATION = 'correspondence.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Development -> DB
-ENV='prod'
+ENV='dev'
+# ENV='prod' -> Uncommerny for production
+
 
 if ENV == 'dev':
     
