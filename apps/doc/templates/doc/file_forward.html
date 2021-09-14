@@ -18,19 +18,19 @@
                         
         {% endif %}
         
-        <div class="field">
-            <label for="receiver">Receiver</label>
-            <div class="control">
-                <div class="select">
-                    <select name="receiver_type" id="id_receiver_type">
-                        <option value="">Choose the document recepient..</option>
-                        <option value="manager">Manager</option>
-                        <option value="cm">Chief Manager</option>
-                        <option value="ceo">Office of CEO</option>
-                        <option value="stores">Stores</option>
-                    </select>
-                </div>
-            </div>
+        <div class="select">
+            <select name="receiver">
+                <option>Select receiver..</option>
+                
+                {% for user in users %}
+                
+                {% if user.is_manager %}
+                    <option value="{{ user.id }}">{{ user.first_name|title }} {{ user.last_name|title}}</option>
+                {% endif %}
+                    
+                {% endfor %}
+                    
+            </select>
         </div>
   
         <div class="field">

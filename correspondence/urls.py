@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views
-from apps.core.views import index
+from apps.core.views import index, login_view
 #signup -> removed signup view import
 
 urlpatterns = [
@@ -24,7 +24,8 @@ urlpatterns = [
 
     path('', index, name='home'),
     #path('signup/', signup, name='signup'),
-    path('login/', views.LoginView.as_view(template_name='core/login.html'), name='login'),
+    # path('login/', views.LoginView.as_view(template_name='core/login.html'), name='login'),
+    path('login/', login_view, name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),
 
     path('dashboard/', include('apps.userprofile.urls')),
@@ -32,3 +33,8 @@ urlpatterns = [
     path('notifications/', include('apps.notification.urls')),
 
 ]
+
+
+# change site header
+admin.site.site_header = 'Correspondence Administration'
+admin.site.index_title = 'Manage Correspondences'

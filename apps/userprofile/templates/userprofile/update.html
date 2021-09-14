@@ -1,0 +1,66 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="section"  >
+          <form action="" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+            <h2 class="title">Update Document</h2>
+            <div class="field">
+                <div class="control">
+                    <input class="input" type="text" name="title" value="{{file.title}}" placeholder="Text input">
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <textarea class="textarea" name="comemnt">{{file.comment}}</textarea>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <div class="select">
+                        <select name="category_name">
+                          <option>Category</option>
+                          
+                          {% if file.category %}
+                            <option value="{{file.category.id}}">{{file.category.name}}</option>
+                              
+                          {% endif %}
+                              
+                        </select>
+                      </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <div class="file has-name is-boxed">
+                        <label class="file-label">
+                          <input class="file-input" type="file" name="doc">
+                          <span class="file-cta">
+                            <span class="file-icon">
+                              <i class="fas fa-upload"></i>
+                            </span>
+                            <span class="file-label">
+                              Choose a file…
+                            </span>
+                          </span>
+                          <span class="file-name">
+                            {{file.title}}<small>.docx</small>
+                          </span>
+                        </label>
+                      </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <button class="button is-success" type="submit">Update</button>
+
+                </div>
+            </div>
+            
+          </form>
+         
+      </div>
+{% endblock content %}

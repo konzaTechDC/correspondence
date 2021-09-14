@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-t^y_(es65p8d3tzxnox5#-on%(@q#_=o9tz$*))^4mj^-d7ls)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ENV='prod'
-
+# ENV='prod'
+ENV = 'dev'
 if ENV == 'dev':
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'apps.userprofile',
     'apps.doc',
     'apps.notification',
+    'apps.manager',
     'crispy_forms',
 ]
 
@@ -88,11 +89,15 @@ AUTH_USER_MODEL = 'core.User'
 WSGI_APPLICATION = 'correspondence.wsgi.application'
 
 
+
+
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Development -> DB
-ENV='prod'
+ENV='dev'
+# ENV='prod' -> Uncommerny for production
+
 
 if ENV == 'dev':
     
@@ -160,6 +165,16 @@ MEDIA_URL = '/media/'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
+
+
+# Email config 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'nicholaskarimi.dev@gmail.com' #os.getenv('EMAIL_USER')
+EMAIL_HOST_PASSWORD = 'udhybmancggbvmku' #os.getenv('EMAIL_PASS')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

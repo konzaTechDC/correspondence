@@ -1,10 +1,18 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.doc.models import Document, ForwardFile, Category
+from apps.doc.forms import DocumentUploadForm
 from apps.userprofile.models import  ConversationMessage
 from apps.core.models import User
+
+from django.contrib import messages
+import logging
+import os
+
+# config logging
+logging.basicConfig(filename='corres_update.log', filemode='w', level=logging.DEBUG)
 
 @login_required
 def dashboard(request):
@@ -22,16 +30,28 @@ def dashboard(request):
 
 @login_required
 def manager_dashboard(request):
-    files = Document.objects.all()
+    files = ForwardFile.objects.all()
+
+   
     return render(request, 'userprofile/manager_dashboard.html', {'userprofile': request.user.userprofile, 'files':files})
 
 
 @login_required
 def view_shared(request, file_id):
-    if request.userprofile.is_admin:
-        file = get_object_or_404(ForwardFile, pk=file_id, document__created_by=request.user)
-    else:
-        file = get_object_or_404(ForwardFile, pk=file_id, created_by=request.user)
+# TODO -> find a means to check what fikes a user can see
+    # if request.user:
+    #     file = get_object_or_404(ForwardFile, pk=file_id, file__created_by=request.user)
+    # else:
+    #     file = get_object_or_404(ForwardFile, pk=file_id, receiver=request.user)
+    file = get_object_or_404(ForwardFile, pk=file_id)
+    # conversation
+    if request.method == 'POST':
+        content  = request.POST.get('content')
+
+        if content:
+            conversationmessage = ConversationMessage.objects.create(send=file, content=content, created_by=request.user)
+
+            return redirect('view_shared', file_id=file_id)
 
     return render(request, 'userprofile/view_forwarded.html', {'file':file})
 
@@ -58,20 +78,61 @@ class FileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
             return True
         return False
 
-class FileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Document
-    template_name = 'userprofile/file_form.html'
-    fields = ['title', 'document', 'comment', 'category']
+# class FileUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+#     model = Document
+#     template_name = 'userprofile/file_form.html'
+#     fields = ['title', 'document', 'comment', 'category']
 
-    def form_valid(self, form):
-        form.instance.created_by = self.request.user
-        return super().form_valid(form)
+#     def form_valid(self, form):
+#         form.instance.created_by = self.request.user
+#         return super().form_valid(form)
 
-    def test_func(self):
-        file = self.get_object()
-        if self.request.user == file.created_by:
-            return True
-        return False
+#     def test_func(self):
+#         file = self.get_object()
+#         if self.request.user == file.created_by:
+#             return True
+#         return False
+
+@login_required()
+def fileUpdate(request, file_id):
+    try:
+        file = Document.objects.get(pk=file_id)
+        if request.method == 'POST':
+            form = DocumentUploadForm(request.POST,  files=request.FILES, instance=file)
+            # if len(request.FILES) != 0: #->check if there is files in the form
+            #     if len(file.document) > 0: # -> check if doc exist and remove
+            #         os.remove(file.document.path)
+            #     else:
+            #         file.document = request.FILES['doc']
+            # file.title = request.POST.get('title')
+            # file.comment = request.POST.get('comment')
+            # file.category = request.POST.get('category_name')
+            # file.save()
+            
+            if form.is_valid():
+                form.save()
+            messages.success(request, "Document updated successfully!")
+            return redirect("dashboard")
+        else:
+            form = DocumentUploadForm()
+    
+        return render(request, 'userprofile/update.html', {'file':file, 'form':form})
+
+    except Exception as e:
+        logging.error(e)
+
+    # form = DocumentUploadForm(request.POST,  files=request.FILES, instance=file)
+
+    # if form.is_valid():
+    #     form.save()
+
+    #     messages.success(request, "Document updated successfully!")
+    #     return redirect("dashboard")
+    
+    # return render(request, 'userprofile/update.html', {'file':file})
+
+ 
+
 
 # @login_required(login_url='login')
 # def getFiles(request):

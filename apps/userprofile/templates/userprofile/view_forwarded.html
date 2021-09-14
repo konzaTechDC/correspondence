@@ -13,7 +13,7 @@
     <hr>
     <h2 class="subtitle">Conversation</h2>
     
-    {% for message in document.conversationmessages.all %}
+    {% for message in forwadfile.conversationmessages.all %}
     <div class="notification">
         <b>{{ message.created_by.username }} - {{ message.created_at|timesince }} ago</b><br>
 

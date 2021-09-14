@@ -1,10 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.mail import send_mail, EmailMessage, EmailMultiAlternatives
+from django.conf import settings
+from django.template.loader  import render_to_string
+
+import datetime
 
 from .forms import DocumentUploadForm, FileFowardForm
 
 from .models import Document, ForwardFile, Category
+from apps.manager.models import Manager
+from apps.core.models import User 
+
 from apps.notification.utilities import create_notification
 
 @login_required
@@ -41,28 +49,67 @@ def file_detail(request, file_id):
 
 def forward_file(request, file_id):
     file = Document.objects.get(pk=file_id)
-    
-
+    managers = Manager.objects.all()
+    users = User.objects.all()
     if request.method == 'POST':
         form = FileFowardForm(request.POST)
 
         if form.is_valid():
             forward = form.save(commit=False)
             forward.file = file 
-            receiver = request.POST.get('receiver_type', 'manager')
-            forward.receiver = receiver
+
+            try:
+                forward.receiver = User.objects.get(pk=int(request.POST.get('receiver', '')))
+            except (ValueError, User.DoesNotExist) as e:
+                return e
+
             forward.created_by = request.user
             forward.save()
 
-            create_notification(request, file.created_by, 'forward', extra_id=forward.id)
+            # send user notification - DONE
+            subject = f'{request.user.first_name} {request.user.last_name} Forwarded a {file.category.name}'
+            # msg = f'Hello, {forward.receiver.first_name}. Please find attached {file.category.name} for your review and actioning'
+            to = forward.receiver.email
+            template = render_to_string('doc/email_template.html', 
+                                            {'name': forward.receiver.first_name, 'category': file.category.name, 'title':file.title})
+            text_content = 'You have a new message'
+            msg = EmailMultiAlternatives(subject, text_content,'nicholaskarimi.dev@gmail.com', [to])
+            msg.attach_alternative(template, 'text/html')
+            msg.send()
+            # send_mail(
+            #     subject,
+            #     template,
+            #     'Kotda Correspondence <nicholaskarimi.dev@gmail.com>',
+            #     [to],
+            # )
+            # print(settings.EMAIL_HOST_USER )
 
-            messages.success(request, f"Document Forwarded successfuly to {receiver}")
+            # method 2 
+            # email = EmailMessage(
+            #     f'{request.user.first_name} {request.user.last_name} Forwarded a {file.category.name}',
+            #     template,
+            #     settings.EMAIL_HOST_USER,
+            #     [to],
+            # )
+            create_notification(request, forward.receiver, 'forward', extra_id=forward.id)
+
+            messages.success(request, f"{file.category.name} Forwarded successfuly to {forward.receiver}")
 
             return redirect('dashboard')
     
     else:
         form = FileFowardForm()
-        # messages.info(request, "Could not forward your document. Please check and resubmit")
         
-    return render(request, 'doc/file_forward.html', {'form':form})
+    return render(request, 'doc/file_forward.html', {'form':form, 'users':users,'managers':managers})
     
+
+
+# def getSalutation():
+#     currentTime = datetime.datetime.now()
+
+#     if currentTime.hour < 12:
+#         return 'Good Morning'
+#     elif 12 <= currentTime.hour < 18:
+#         return 'Good afternoon'
+#     else:
+#         return 'Good evening'

@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 # from django.contrib.auth.forms import UserCreationForm
 from .forms import UserRegForm
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from apps.userprofile.models import UserProfile
 from apps.doc.models import Document
 # from django.contrib.sessions.backends import file
+from django.contrib.auth.forms import  AuthenticationForm   
+import logging
+
+logging.basicConfig(filename='user_login.log', filemode='w', level=logging.DEBUG)
 
 def index(request):
     files = Document.objects.all()
@@ -55,3 +59,24 @@ def signup(request):
 
     return render(request, 'core/signup.html', {'form':form})
 
+def login_view(request):
+    try:
+
+        form = AuthenticationForm()
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(username=username, password=password)
+            if user is not None: # is not None and user.is_manager == True
+                login(request, user)
+                # check if there is next request -> to get a specific page such as dashboard
+                if request.GET.get('next'):
+                    return redirect(request.GET.get('next'))
+                else:
+                    return redirect('manager_dashboard')
+
+        return render(request, 'core/login.html', {'form':form})
+
+    except Exception as e:
+        logging.error(e)

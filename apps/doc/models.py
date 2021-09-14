@@ -4,7 +4,7 @@ from apps.core.models import User
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-
+from apps.manager.models import Manager
 CATEGORIES = [
 	('M', 'Memo'),
 	('L', 'Letters'),
@@ -57,11 +57,15 @@ class Document(models.Model):
 
     def get_absolute_url(self):
         return reverse('file-detail', kwargs={'pk': self.pk})
+    
+    @property
+    def get_file_url(self):
+        if self.document and hasattr(self.document, 'url'):
+            return self.document.url
 
 class ForwardFile(models.Model):
     file = models.ForeignKey(Document, related_name='documents', on_delete=models.CASCADE)
-    # sender = models.ForeignKey(User, related_name='sender', on_delete=models.CASCADE)
-    receiver = models.CharField(max_length=30, choices=RECEIVER_TYPE, default=MANAGER)
+    receiver = models.ForeignKey(User, related_name='receiver', on_delete=models.CASCADE)
     comment = models.TextField()
 
     created_by = models.ForeignKey(User, related_name='documents', on_delete=models.CASCADE)
