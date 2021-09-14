@@ -95,31 +95,29 @@ class FileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 @login_required()
 def fileUpdate(request, file_id):
-    try:
-        file = Document.objects.get(pk=file_id)
-        if request.method == 'POST':
-            form = DocumentUploadForm(request.POST,  files=request.FILES, instance=file)
-            # if len(request.FILES) != 0: #->check if there is files in the form
-            #     if len(file.document) > 0: # -> check if doc exist and remove
-            #         os.remove(file.document.path)
-            #     else:
-            #         file.document = request.FILES['doc']
-            # file.title = request.POST.get('title')
-            # file.comment = request.POST.get('comment')
-            # file.category = request.POST.get('category_name')
-            # file.save()
-            
-            if form.is_valid():
-                form.save()
-            messages.success(request, "Document updated successfully!")
-            return redirect("dashboard")
-        else:
-            form = DocumentUploadForm()
-    
-        return render(request, 'userprofile/update.html', {'file':file, 'form':form})
+    file = Document.objects.get(pk=file_id)
+    if request.method == 'POST':
+        form = DocumentUploadForm(request.POST,  files=request.FILES, instance=file)
+        # if len(request.FILES) != 0: #->check if there is files in the form
+        #     if len(file.document) > 0: # -> check if doc exist and remove
+        #         os.remove(file.document.path)
+        #     else:
+        #         file.document = request.FILES['doc']
+        # file.title = request.POST.get('title')
+        # file.comment = request.POST.get('comment')
+        # file.category = request.POST.get('category_name')
+        # file.save()
+        
+        if form.is_valid():
+            form.save()
+        messages.success(request, "Document updated successfully!")
+        return redirect("dashboard")
+    else:
+        form = DocumentUploadForm()
 
-    except Exception as e:
-        logging.error(e)
+    return render(request, 'userprofile/update.html', {'file':file, 'form':form})
+
+    
 
     # form = DocumentUploadForm(request.POST,  files=request.FILES, instance=file)
 

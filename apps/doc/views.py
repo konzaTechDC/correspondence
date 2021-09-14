@@ -66,31 +66,16 @@ def forward_file(request, file_id):
             forward.created_by = request.user
             forward.save()
 
-            # send user notification - DONE
             subject = f'{request.user.first_name} {request.user.last_name} Forwarded a {file.category.name}'
-            # msg = f'Hello, {forward.receiver.first_name}. Please find attached {file.category.name} for your review and actioning'
+            from_email = settings.EMAIL_HOST_USER
             to = forward.receiver.email
             template = render_to_string('doc/email_template.html', 
                                             {'name': forward.receiver.first_name, 'category': file.category.name, 'title':file.title})
             text_content = 'You have a new message'
-            msg = EmailMultiAlternatives(subject, text_content,'nicholaskarimi.dev@gmail.com', [to])
+            msg = EmailMultiAlternatives(subject, text_content,from_email, [to])
             msg.attach_alternative(template, 'text/html')
             msg.send()
-            # send_mail(
-            #     subject,
-            #     template,
-            #     'Kotda Correspondence <nicholaskarimi.dev@gmail.com>',
-            #     [to],
-            # )
-            # print(settings.EMAIL_HOST_USER )
 
-            # method 2 
-            # email = EmailMessage(
-            #     f'{request.user.first_name} {request.user.last_name} Forwarded a {file.category.name}',
-            #     template,
-            #     settings.EMAIL_HOST_USER,
-            #     [to],
-            # )
             create_notification(request, forward.receiver, 'forward', extra_id=forward.id)
 
             messages.success(request, f"{file.category.name} Forwarded successfuly to {forward.receiver}")
@@ -101,15 +86,3 @@ def forward_file(request, file_id):
         form = FileFowardForm()
         
     return render(request, 'doc/file_forward.html', {'form':form, 'users':users,'managers':managers})
-    
-
-
-# def getSalutation():
-#     currentTime = datetime.datetime.now()
-
-#     if currentTime.hour < 12:
-#         return 'Good Morning'
-#     elif 12 <= currentTime.hour < 18:
-#         return 'Good afternoon'
-#     else:
-#         return 'Good evening'

@@ -60,23 +60,21 @@ def signup(request):
     return render(request, 'core/signup.html', {'form':form})
 
 def login_view(request):
-    try:
 
-        form = AuthenticationForm()
-        if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+    form = AuthenticationForm()
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-            user = authenticate(username=username, password=password)
-            if user is not None: # is not None and user.is_manager == True
-                login(request, user)
-                # check if there is next request -> to get a specific page such as dashboard
-                if request.GET.get('next'):
-                    return redirect(request.GET.get('next'))
-                else:
-                    return redirect('manager_dashboard')
+        user = authenticate(username=username, password=password)
+        if user is not None: # is not None and user.is_manager == True
+            login(request, user)
+            # check if there is next request -> to get a specific page such as dashboard
+            if request.GET.get('next'):
+                return redirect(request.GET.get('next'))
+            else:
+                return redirect('manager_dashboard')
 
-        return render(request, 'core/login.html', {'form':form})
+    return render(request, 'core/login.html', {'form':form})
 
-    except Exception as e:
-        logging.error(e)
+    
