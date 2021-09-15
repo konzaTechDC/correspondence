@@ -1,4 +1,3 @@
-
 """
 Django settings for correspondence project.
 
@@ -13,10 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import json
-#load config file
-with open('/etc/config.json') as config_file:
-    config = json.load(config_file)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,11 +21,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config['SECRET_KEY']
+SECRET_KEY = 'django-insecure-t^y_(es65p8d3tzxnox5#-on%(@q#_=o9tz$*))^4mj^-d7ls)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ENV='prod'
-#ENV = 'dev'
+# ENV='prod'
+ENV = 'prod'
 if ENV == 'dev':
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -101,7 +96,7 @@ WSGI_APPLICATION = 'correspondence.wsgi.application'
 
 # Development -> DB
 #ENV='dev'
-ENV='prod' #-> Uncommerny for production
+ENV='prod' 
 
 
 if ENV == 'dev':
@@ -174,11 +169,11 @@ LOGOUT_REDIRECT_URL = 'home'
 
 # Email config 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-mail.outlook.com' #'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config['EMAIL_HOST_USER'] #'correspondence@konza.go.ke' config['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD'] #'udhybmancggbvmku@2021#$'  #config['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = 'nicholaskarimi.dev@gmail.com' #os.getenv('EMAIL_USER')
+EMAIL_HOST_PASSWORD = 'udhybmancggbvmku' #os.getenv('EMAIL_PASS')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

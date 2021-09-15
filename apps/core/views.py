@@ -9,7 +9,7 @@ from apps.doc.models import Document
 from django.contrib.auth.forms import  AuthenticationForm   
 import logging
 
-logging.basicConfig(filename='user_login.log', filemode='w', level=logging.DEBUG)
+#logging.basicConfig(filename='user_login.log', filemode='w', level=logging.DEBUG)
 
 def index(request):
     files = Document.objects.all()

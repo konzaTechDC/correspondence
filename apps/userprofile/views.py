@@ -12,7 +12,7 @@ import logging
 import os
 
 # config logging
-logging.basicConfig(filename='corres_update.log', filemode='w', level=logging.DEBUG)
+#logging.basicConfig(filename='corres_update.log', filemode='w', level=logging.DEBUG)
 
 @login_required
 def dashboard(request):
