@@ -85,6 +85,7 @@ TEMPLATES = [
                 # custom
                 # 'apps.core.core_context_processors.userprofile',
                 'apps.notification.context_processor.notifications',
+                'apps.notification.context_processor.read_notifications',
             ],
         },
     },
@@ -100,7 +101,7 @@ WSGI_APPLICATION = 'correspondence.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Development -> DB
-#ENV='dev'
+# ENV='dev'
 ENV='prod' #-> Uncommerny for production
 
 
@@ -160,7 +161,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -171,14 +175,14 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_REDIRECT_URL = 'home'
 
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Email config 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp-mail.outlook.com' #'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = config['EMAIL_HOST_USER'] #'correspondence@konza.go.ke' config['EMAIL_HOST_USER']
-EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD'] #'udhybmancggbvmku@2021#$'  #config['EMAIL_HOST_PASSWORD']
+EMAIL_HOST_USER = config['EMAIL_HOST_USER'] 
+EMAIL_HOST_PASSWORD = config['EMAIL_HOST_PASSWORD'] 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

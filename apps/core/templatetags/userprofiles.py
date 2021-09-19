@@ -1,6 +1,6 @@
 from django import template
 
-from apps.userprofile.models import UserProfile
+from apps.core.models import UserType
 
 
 register = template.Library()
@@ -8,5 +8,5 @@ register = template.Library()
 @register.simple_tag
 def userprofile(request):
     return {
-        'userprofile': UserProfile.objects.all()
+        'userprofile': UserType.objects.all()
     }

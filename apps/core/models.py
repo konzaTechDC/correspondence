@@ -43,17 +43,13 @@ class User(AbstractBaseUser):
     first_name = models.CharField(max_length=150, blank=True)
     last_name = models.CharField(max_length=150, blank=True)
     username = models.CharField(max_length=20, unique=True)
+
     created_at = models.DateTimeField(verbose_name='created-on', auto_now_add=True)
     last_login = models.DateTimeField(verbose_name='last-login', auto_now_add=True)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-
-    is_manager = models.BooleanField(default=False)
-    is_cm = models.BooleanField(default=False)
-    is_ceo = models.BooleanField(default=False)
-    is_stores = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email' #LOGINFIELD
@@ -70,3 +66,30 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
     
+    def get_absolute_url(self):
+        return "/users/%i/" % (self.pk)
+
+    def get_email(self):
+        return self.email
+    
+class UserType(models.Model):
+    is_admin = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
+    is_cm = models.BooleanField(default=False)
+    is_ceo = models.BooleanField(default=False)
+    is_stores = models.BooleanField(default=False)
+    user = models.OneToOneField(User, related_name='type', on_delete=models.CASCADE)
+
+    def __str__(self):
+        if self.is_manager == True:
+            return User.get_email(self.user) + '- is_manager'
+        elif self.is_cm == True:
+            return User.get_email(self.user) + '- is_ceo'
+        elif self.is_ceo == True:
+            return User.get_email(self.user) + '- is_ceo'
+        elif self.is_admin:
+            return User.get_email(self.user) + '- is_admin'
+        else:
+            return f"{self.user} has no type"
+
+

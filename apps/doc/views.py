@@ -33,7 +33,7 @@ def upload_doc(request):
             upload.save()
 
             #success notification
-            messages.success(request, 'File Document Uploaded saved successfully.')      
+            messages.success(request, 'Document Uploaded successfully.')      
             return redirect('dashboard')
     else:
         form = DocumentUploadForm()

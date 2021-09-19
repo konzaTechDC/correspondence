@@ -2,6 +2,23 @@
 
 
 {% block content %}
-    <h2>Mr manager her</h2>
+    <h2>Welcome Mr. {{ request.user.last_name}}</h2>
+
+    
+    {% for file in files %}
+        
+    
+    {% if file.receiver == request.user %}
+        {{file.receiver}}
+        {{ file.created_by}}
+        {{file.file.title}}
+        {{file.comment}}
+        
+    {% endif %}
+        
+     {% empty %} 
+        No files shared with you yet.
+    {% endfor %}
+        
 {% endblock content %}
     

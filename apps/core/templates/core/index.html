@@ -1,6 +1,22 @@
 {% extends 'core/base.html' %}
-
+{% load static %}
 {% block content %}
 
+    <div class="container">
+        <!-- <h1 class="title">Welcome: {{ request.user.type }}</h1> -->
+
+        <div class="card">
+        <div class="card-content">
+            <div class="content">
+                <h1 class="title">Welcome: {{ request.user.first_name }}</h1>
+            </div>
+        </div>
+        </div>
+    </div>
 {% endblock content %}
+
+{% block script %}
+    
+{% endblock script %}
+    
     

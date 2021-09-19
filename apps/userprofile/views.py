@@ -5,7 +5,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from apps.doc.models import Document, ForwardFile, Category
 from apps.doc.forms import DocumentUploadForm
 from apps.userprofile.models import  ConversationMessage
-from apps.core.models import User
+from apps.core.models import User, UserType
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
+from apps.core.models import UserType
 
 from django.contrib import messages
 import logging
@@ -16,24 +20,39 @@ import os
 
 @login_required
 def dashboard(request):
-    category = request.GET.get('category')
+    if request.user.is_authenticated and UserType.objects.get(user=request.user).is_manager:
+        files = ForwardFile.objects.all()
 
-    if category == None:
-        files = Document.objects.all()
-    else:
-        files = Document.objects.filter(category__name=category)
-
-    categories = Category.objects.all()
+        return render(request, 'userprofile/manager_dashboard.html', {'files':files})
     
-    # files = Document.objects.all()
-    return render(request, 'userprofile/dashboard.html', {'userprofile': request.user.userprofile, 'categories':categories, 'files':files})
+    elif request.user.is_authenticated and UserType.objects.get(user=request.user).is_admin:
+
+        category = request.GET.get('category')
+
+        if category == None:
+            files = Document.objects.all()
+        else:
+            files = Document.objects.filter(category__name=category)
+
+        categories = Category.objects.all()
+
+        # files = Document.objects.all()
+        return render(request, 'userprofile/dashboard.html', {'categories':categories, 'files':files})
+
+    else:
+        return HttpResponseRedirect(reverse('login'))
 
 @login_required
-def manager_dashboard(request):
-    files = ForwardFile.objects.all()
+def manager(request):
+    if request.user.is_authenticated and UserType.objects.get(user=request.user).is_manager:
+        return HttpResponseRedirect(reverse('manager'))
+    elif request.user.is_authenitcated and UserType.objecs.get(user=request.user).is_admin:
+        return HttpResponseRedirect(reverse('dashboard'))
+    
+        files = ForwardFile.objects.all()
+        shared = ForwardFile.objects.get(receiver=request.user.is_manager)
 
-   
-    return render(request, 'userprofile/manager_dashboard.html', {'userprofile': request.user.userprofile, 'files':files})
+    return render(request, 'userprofile/manager_dashboard.html',{'files':files, 'shared':shared})
 
 
 @login_required

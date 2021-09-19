@@ -24,7 +24,7 @@
                 
                 {% for user in users %}
                 
-                {% if user.is_manager %}
+                {% if user.type.is_manager %}
                     <option value="{{ user.id }}">{{ user.first_name|title }} {{ user.last_name|title}}</option>
                 {% endif %}
                     
