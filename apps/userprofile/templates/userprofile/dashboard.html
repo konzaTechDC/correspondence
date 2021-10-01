@@ -57,7 +57,6 @@
                     {% if user.is_authenticated %}
                                             
                      <a href="{% url 'new_file' %}" class="button is-success">New File</a>
-                     <a href="{% url 'dashboard' %}" class="button is-light">Dashboard</a>
                      <a href="{% url 'notifications' %}" class="button is-light">Notifications ({{ notifications.count }})</a>
                      <a href="{% url 'logout' %}" class="button is-danger">Logout</a>
                         
@@ -97,7 +96,7 @@
                     
                     {% for category in categories  %}
                         <li class="list-group-item">
-                            <a href="{% url 'dashboard' %}?category={{category.name}}">{{category.name}}</a>
+                            <a href="{% url 'dashboard' %}?category={{category.name}}"> <strong style="font-weight: bold;">{{category.name}}</strong></a>
                         </li>
                     {% endfor %}
                     
@@ -116,7 +115,7 @@
                     <div class="col md-4 p-2">
                         <div class="card">
                             <div class="thumb-preview m-2">
-                                <a href="#" class="thumb-image">
+                                <a href="{% url 'file_detail' file.id %}" class="thumb-image">
                                     <img src="{% static 'file.png' %}" class="img-responsive" alt="file-icon">
                                 </a>
                                 <h5 class="mg-title text-semibold">{{file.title}}<small>.docx</small></h5>

@@ -1,0 +1,29 @@
+{% extends 'core/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <h2 class="title">Registration</h2>
+
+    
+    {% if register %}
+        <h3 class="is-success">Registartion Successful</h3>
+    {% else %}
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        {{profile_form.as_p}}
+        {{info_form.as_p}}
+
+        <div class="field">
+            <div class="control">
+                <button class="button is-success">Sign Up</button>
+            </div>
+        </div>
+    </form>
+    {% endif %}
+        
+    
+</div>
+
+{% endblock%}

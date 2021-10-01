@@ -4,7 +4,6 @@ from apps.core.models import User
 from django.utils import timezone
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from apps.manager.models import Manager
 CATEGORIES = [
 	('M', 'Memo'),
 	('L', 'Letters'),
@@ -47,6 +46,8 @@ class Document(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     changed_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['-created_at']
 
     def __str__(self):
         return self.title
@@ -71,17 +72,5 @@ class ForwardFile(models.Model):
     created_by = models.ForeignKey(User, related_name='documents', on_delete=models.CASCADE)
     forwarded_at = models.DateTimeField(auto_now_add=True)
 
-    
-
-class Department(models.Model):
-    name = models.CharField(_('name'),max_length=100,blank=False,null=False)
-    description = models.TextField(_('description'),max_length=500, blank=True)
-    is_active = models.BooleanField(default=True)
-    members = models.ManyToManyField(User, related_name='members')
-
-    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_by', verbose_name="created by", null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.name
+    class Meta:
+        ordering = ['-forwarded_at']

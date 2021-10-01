@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" >
-    <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main.css' %}">
     <title>Correspondence</title>
 </head>
 <body>
@@ -27,14 +27,13 @@
                     {% if request.user.is_authenticated and request.user.type.is_admin %}
                                             
                         <a href="{% url 'new_file' %}" class="button is-success">New File</a>
-                        <a href="{% url 'dashboard' %}" class="button is-light">Dashboard</a>
                         <a href="{% url 'notifications' %}" class="button is-light">Notifications ({{ notifications.count }})</a>
                         <a href="{% url 'logout' %}" class="button is-danger">Logout</a>
                         
                     {% elif request.user.is_authenticated and request.user.type.is_manager  %}
                         <a href="{% url 'notifications' %}" class="button is-dark">Notifications ({{ notifications.count }})</a>
                         <a href="#" class="button is-light">Shared with me</a>
-                        <a href="#" class="button is-warning">Read Messages ({{read_notifications.count}}) </a>
+                        <a href="{% url 'read-notification'  %}" class="button is-warning">Read Messages </a>
                         <a href="{% url 'logout' %}" class="button is-danger">Logout</a>
 
                     {% else %}

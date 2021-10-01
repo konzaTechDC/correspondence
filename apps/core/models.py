@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
-
+from django.utils.translation import gettext_lazy as _
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class UserAccountManager(BaseUserManager):
     def create_user(self, email,username, first_name, last_name, password=None):
@@ -72,6 +74,10 @@ class User(AbstractBaseUser):
     def get_email(self):
         return self.email
     
+    def get_user_dept(self):
+        department = Department.objects.filter(self)
+        return department
+    
 class UserType(models.Model):
     is_admin = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
@@ -92,4 +98,53 @@ class UserType(models.Model):
         else:
             return f"{self.user} has no type"
 
+class Department(models.Model):
+    name = models.CharField(_('name'),max_length=100,blank=False,null=False)
+    description = models.TextField(_('description'),max_length=500,null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="created by", null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.name
+
+    
+
+    def related_resource(self):
+        pass
+
+
+
+class Role(models.Model):
+    department = models.ForeignKey(Department, on_delete=models.CASCADE)
+    name = models.CharField(_('name'),max_length=100,blank=False,null=False)
+    description = models.TextField(_('description'),max_length=500, blank=True)
+    is_active = models.BooleanField(default=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="created by", null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.name
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    bio = models.TextField(_('bio'),max_length=500, blank=True)
+    bio_ispublic = models.BooleanField(default=False)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, verbose_name="department", null=True)
+    role = models.CharField(blank=True, max_length=50, verbose_name="role", null=True)
+    country = models.CharField(max_length=30, null=True, blank=True)
+    birth_date = models.DateField(null=True, blank=True)
+    email_confirmed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.user.username
+
+
+    @receiver(post_save, sender=User)
+    def update_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+        instance.profile.save()

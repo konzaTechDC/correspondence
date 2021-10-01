@@ -1,19 +1,20 @@
+import os
+import logging
 from django.shortcuts import render,get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from django.views.generic import ListView, DeleteView, UpdateView
+from django.contrib import messages
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
+from django.views.generic import ListView, DeleteView, UpdateView
 from apps.doc.models import Document, ForwardFile, Category
 from apps.doc.forms import DocumentUploadForm
 from apps.userprofile.models import  ConversationMessage
 from apps.core.models import User, UserType
-from django.http import HttpResponseRedirect
-from django.urls import reverse
 
-from apps.core.models import UserType
+from apps.notification.models import Notification
 
-from django.contrib import messages
-import logging
-import os
 
 # config logging
 #logging.basicConfig(filename='corres_update.log', filemode='w', level=logging.DEBUG)
@@ -75,6 +76,12 @@ def view_shared(request, file_id):
     return render(request, 'userprofile/view_forwarded.html', {'file':file})
 
 
+@login_required
+
+def read_notification(request):
+    notifications = Notification.objects.filter(is_read=True)
+
+    return render(request, 'userprofile/read_notification.html', {'notifications':notifications})
 
 class UserFileListView(LoginRequiredMixin, ListView):
     model = Document
@@ -106,11 +113,11 @@ class FileDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 #         form.instance.created_by = self.request.user
 #         return super().form_valid(form)
 
-#     def test_func(self):
-#         file = self.get_object()
-#         if self.request.user == file.created_by:
-#             return True
-#         return False
+    # def test_func(self):
+    #     file = self.get_object()
+    #     if self.request.user == file.created_by:
+    #         return True
+    #     return False
 
 @login_required()
 def fileUpdate(request, file_id):

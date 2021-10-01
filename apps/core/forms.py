@@ -1,5 +1,5 @@
 from django import forms
-from apps.core.models import User
+from apps.core.models import User, Profile
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils.translation import ugettext_lazy as _
 
@@ -32,19 +32,16 @@ class UserRegForm(UserCreationForm):
             }
         }
 
-class BootstrapAuthenticationForm(AuthenticationForm):
-    """Authentication form which uses boostrap CSS."""
-    email = forms.CharField(max_length=254,
-                            widget=forms.TextInput({
-                                'class': 'form-control',
-                                'aria-describedby':'inputEmail',
-                                'required':'required',
-                                'id':'inputEmail',
-                                'placeholder': 'Email'}))
-    password = forms.CharField(label=_("Password"),
-                            widget=forms.PasswordInput({
-                                'class': 'form-control',
-                                'aria-describedby':'inputPassword',
-                                'required':'required',
-                                'id':'inputPassword',
-                                'placeholder':'Password'}))
+class ProfileForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User 
+        fields = ('username', 'password', 'email')
+
+    # extra info 
+
+class InfoProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile 
+        fields = ['bio', 'bio','bio_ispublic','department', 'role', 'country','birth_date','email_confirmed']

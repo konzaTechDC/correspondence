@@ -1,0 +1,27 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <h2>Read B</h2>
+        
+        {% for notification in notifications %}
+            
+            {% if notification %}
+            <div class="notification is-warning read">
+                <div class="container">
+                    <a href="#"><h1 class="display-4">{{file.notification.title }}</h1></a>
+                    <h4>Sent by: {{ notification.created_by }}</h4>
+                    <h4>Sent on: {{ notification.created_at|timesince }} ago</h4>
+                </div>
+                <a href="#" class="button is-dark" >View</a>
+                <a href="#" class="button is-success">Forward</a>
+            </div>
+            {% endif %}
+                
+        {% endfor %}
+            
+    </div>
+    
+</div>   
+{% endblock content %}
+    

@@ -19,13 +19,14 @@ from django.urls import path, include
 from django.contrib.auth import views
 from apps.core.views import index
 from django.contrib.auth.views import LoginView, LogoutView
+# from apps.core.views import profile_reg
 #signup -> removed signup view import
 from apps.core import forms
 urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('', index, name='home'),
-    #path('signup/', signup, name='signup'),
+    # path('signup/', profile_reg, name='signup'),
     path('login/', views.LoginView.as_view(template_name='core/login.html'), name='login'),
     # path('login/', login_view, name='login'),
     path('logout/', views.LogoutView.as_view(), name='logout'),

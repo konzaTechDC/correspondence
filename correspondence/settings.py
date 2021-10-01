@@ -29,8 +29,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-ENV='prod'
-#ENV = 'dev'
+#ENV='prod'
+ENV = 'dev'
 if ENV == 'dev':
     DEBUG = True
     ALLOWED_HOSTS = []
@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     'apps.userprofile',
     'apps.doc',
     'apps.notification',
-    'apps.manager',
     'crispy_forms',
 ]
 
@@ -101,8 +100,8 @@ WSGI_APPLICATION = 'correspondence.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Development -> DB
-# ENV='dev'
-ENV='prod' #-> Uncommerny for production
+ENV='dev'
+#ENV='prod' #-> Uncommerny for production
 
 
 if ENV == 'dev':
