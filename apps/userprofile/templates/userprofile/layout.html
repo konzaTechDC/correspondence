@@ -1,49 +1,134 @@
 {% load static %}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    
-    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" >
-    <link rel="stylesheet" href="{% static 'docs/main.css' %}">
     {% if title %}
-        <title>Correspondence Management - {{title}}</title>
+    <title>Correspondence Management - {{title}}</title>
     {% else %}
         <title>Correspondence Management</title>
     {% endif %}
 
-</head>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="{% static 'css/ie10-viewport-bug-workaround.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/dashboard.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+    <style>
+    .navbar {
+    background-color: #0f3620cb;
+  }
+  .navbar .navbar-brand {
+    color: #eee;
+  } 
+  .navbar #navbar ul li {
+    color: #000;
+  }
+  .container-fluid .sidebar {
+    background-color: #0f3620cb !important;
+    color:#fff;
+  }
+    
+    </style>
+  </head>
+
   <body>
-    <nav class="navbar navbar-dark bg-success justify-content-between mb-3">
-        <a href="{% url 'home' %}" class="navbar-brand">Correspondence</a>
-        <a class="btn " href="{% url 'notifications' %}" role="button">Notifications <i class="fa fa-bell"></i> <span class="badge badge-light"> {{notifications.count }}</span></a>
-        <a class="btn " href="#" role="button">View Messages <i class="fa fa-eye"></i> <span class="badge badge-light"> {{read_notifications.count }}</span></a>
 
-        <a class="btn btn-danger" href="{% url 'logout' %}" role="button">Logout </a>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Welcome {{request.user.first_name}} {{request.user.last_name}}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            {% if user.is_authenticated %}                          
+                <li><a href="{% url 'new_file' %}" class="button is-success" style="color: #fff;">New File</a></li>
+                <li><a href="{% url 'notifications' %}" class="button is-light" style="color: #fff;">Notifications ({{ notifications.count }})</a></li>
+                <li><a href="{% url 'logout' %}" class="button is-danger" style="color: #fff;">Logout</a> </li>
+            {% elif user.is_authenticated and userprofile.user == userprofile.manager %}
+                <li><a href="#" class="button is-success" style="color: #fff;">Shared with me</a></li>
+            {% else %}
+                <!-- <a href="#" class="button is-success"><strong>Signup</strong></a> -->
+                <li><a href="{% url 'login' %}" class="button is-light" style="color: #fff;"><strong>Login</strong></a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
 
-      </nav>
-      <div class="container my-bg">
-        {% if messages %}
-          {% for message in messages %}
-              <div class="alert alert-{{ message.tags }}">
-                {{ message }}
-              </div>
-          {% endfor %}
-        {% endif %}
-    {% block content %}
+    <div class="container-fluid">
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
       
-    {% endblock  %}
-</div> 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="{% static 'docs/main.js' %}"></script>
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+          
+          {% block sidebar %}
+          {% endblock sidebar %}
+            
+          <!-- <ul class="nav nav-sidebar">
+            <li class="active"><a href="{% url 'home' %}">Dashboard <span class="sr-only">(current)</span></a></li>
+	
+            <li><a href=" {% url 'timeline' %}?page=timeline"><span class="glyphicon glyphicon-user"></span> View Timeline</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Manage Buyers</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-envelope"></span> Generate Report</a></li>
+            
+          </ul>   -->
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2  main">
+          <!-- container-->
+            {% block content %}
+            
+            {% endblock content %}
+            
+          </div>
+          
+          
+		  <!-- container end-->
+
+          <div class="row placeholders">
+            
+          </div>
+		 
+         
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <script src="{% static 'js/vendor/holder.min.js' %}"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="{% static 'js/ie10-viewport-bug-workaround.js' %}"></script>
   </body>
 </html>

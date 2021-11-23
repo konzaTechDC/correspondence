@@ -21,9 +21,9 @@ from apps.notification.models import Notification
 
 @login_required
 def dashboard(request):
+    page = request.GET.get('page', '')
     if request.user.is_authenticated and UserType.objects.get(user=request.user).is_manager:
         files = ForwardFile.objects.all()
-
         return render(request, 'userprofile/manager_dashboard.html', {'files':files})
     
     elif request.user.is_authenticated and UserType.objects.get(user=request.user).is_admin:
@@ -170,3 +170,9 @@ def fileUpdate(request, file_id):
 #     categories = Category.objects.all()
 #     context = {'categories': categories, 'files':files}
 #     return render(request, 'userprofile/dashboard.html', context)
+
+@login_required
+def timeline(request):
+    if request.user.is_authenticated and UserType.objects.get(user=request.user).is_admin:
+        forwarded =  ForwardFile.objects.filter(forwarded=True)
+    return render(request, 'userprofile/timeline.html', {'forwarded':forwarded})

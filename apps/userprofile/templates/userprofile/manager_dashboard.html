@@ -1,27 +1,25 @@
-{% extends 'core/base.html' %}
+{% extends 'userprofile/layout.html' %}
 {% load static %}
-{% block content %}
-<div class="container">
-    
+
+{% block sidebar%}
+
+{% endblock sidebar%}
+{% block content %} 
         
         {% for file in files %}
             
             {% if file.receiver == request.user %}
-            <div class="notification is-warning read">
-                <div class="container">
-                  <a href="#"><h1 class="display-4">{{file.file.title }}</h1></a>
-                  <h4>Sent by: {{ file.created_by }}</h4>
-                  <h4>Comment: {{ file.comment }}</h4>
-                </div>
+              <a href="#"><h1 class="display-4">{{file.file.title }}</h1></a>
+              <h4>Sent by: {{ file.created_by }}</h4>
+              <h4>Comment: {{ file.comment }}</h4>
+           
                 <a href="#" class="button is-dark" >View</a>
                 <a href="{% url 'manager_forward' file.id %}" class="button is-success">Forward</a>
-              </div>
             {% endif %}
                 
         {% endfor %}
             
     </div>
     
-</div>   
 {% endblock content %}
     

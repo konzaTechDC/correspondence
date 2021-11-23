@@ -16,6 +16,7 @@ from apps.core.models import User
 from apps.core.models import Profile
 
 from apps.notification.utilities import create_notification
+from .models import ForwardFile
 
 @login_required
 def upload_doc(request):
@@ -78,6 +79,7 @@ def forward_file(request, file_id):
                 return e
 
             forward.created_by = request.user
+            forward.forwarded = True
             forward.save()
 
             subject = f'{request.user.first_name} {request.user.last_name} Forwarded a {file.category.name}'

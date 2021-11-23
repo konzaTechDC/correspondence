@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+
+{% block sidebar %}
+<ul class="nav nav-sidebar">
+    <li class="active"><a href="{% url 'home' %}">Dashboard <span class="sr-only">(current)</span></a></li>
+    <li><a href=" {% url 'timeline' %}?page=timeline"><span class="glyphicon glyphicon-user"></span> View Timeline</a></li>
+
+</ul>
+	
+{% endblock sidebar %}
+
+{% block content %}
+    
+
+<div class="wrapper">
+    <div class="timeline">
+        <ul>
+            
+            {% for file in forwarded %}
+                
+                {% if file %}
+                    <li>
+                        <div class="timeline-content">
+                            <h2 class="date">{{ file.forwarded_at }}</h2>
+                            <h1>{{ file.file.title }}</h1>
+                            <p>{{ file.comment }}</p>
+                            <div class="btn btn-group p-0" role="group" aria-label="Basic example">
+                                <span class="btn btn-light badge">Forwarded by</span>
+                                
+                                <span class="btn btn-success badge">{{ file.created_by}}</span>
+                            </div>
+                            <div class="btn btn-group p-0" role="group" aria-label="Basic example">
+                                <span class="btn btn-light badge">Stage: {{ file.receiver.first_name}} {{ file.receiver.last_name}}</span>
+                            </div>
+                            
+                        </div>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock content %}
+

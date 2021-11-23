@@ -41,6 +41,7 @@ class Document(models.Model):
     comment = models.TextField()
     date_posted = models.DateTimeField(default=timezone.now)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
+    active = models.BooleanField(default=True)
     
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -68,7 +69,8 @@ class ForwardFile(models.Model):
     file = models.ForeignKey(Document, related_name='documents', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='receiver', on_delete=models.CASCADE)
     comment = models.TextField()
-
+    forwarded = models.BooleanField(default=False)
+    
     created_by = models.ForeignKey(User, related_name='documents', on_delete=models.CASCADE)
     forwarded_at = models.DateTimeField(auto_now_add=True)
 
