@@ -4,7 +4,27 @@ services:
   app:
     build:
       context: .
+    command: >
+      sh -c "
+            # python manage.py wait_for_db &&
+            python manage.py migrate &&
+            python manage.py runserver 0.0.0.0:8000"
     ports:
       - 8000:8000
     volumes:
       - ./correspondence:/app
+    environment:
+      - SECRET_KEY=+16a2x$b1$h1wv2tw#lcy-%wwvf*7b$j%vy-(-$qoc@gp@l7r6
+      - DEBUG=1
+      - DB_HOST=db
+      - DB_NAME=corres_db
+      - DB_USER=corres_user
+      - DB_PASS=corres12345
+    depends_on:
+      - db
+  db:
+    image: postgres:13-alpine
+    environment:
+      - POSTGRES_DB=corres_db
+      - POSTGRES_USER=corres_user
+      - POSTGRES_PASSWORD=corres12345

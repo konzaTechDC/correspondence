@@ -21,19 +21,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-t^y_(es65p8d3tzxnox5#-on%(@q#_=o9tz$*))^4mj^-d7ls)'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # ENV='prod'
-ENV = 'dev'
-if ENV == 'dev':
-    DEBUG = True
-    ALLOWED_HOSTS = []
-else:
+# ENV = 'dev'
+# if ENV == 'dev':
+#     DEBUG = True
+#     ALLOWED_HOSTS = []
+# else:
   # DEBUG = False
-   DEBUG = True #for prod testing
-   ALLOWED_HOSTS = ['correspondence.konza.ke', '41.76.175.221'] 
-
+DEBUG = bool(int(os.environ.get('DEBUG', 0))) 
+#env vars always stored as strings, 0=false, 1=true,convert into int -> bool
+#default to false
+ALLOWED_HOSTS = [] 
+# 'correspondence.konza.ke', '41.76.175.221'
+ALLOWED_HOSTS.extend(
+    filter(
+        None, 
+        os.environ.get('ALLOWED_HOST', '').split(','),
+        )
+    )
 # Application definition
 
 INSTALLED_APPS = [
@@ -92,28 +100,38 @@ WSGI_APPLICATION = 'correspondence.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # Development -> DB
-ENV='dev'
+# ENV='dev'
 # ENV='prod' -> Uncommerny for production
 
 
-if ENV == 'dev':
+# if ENV == 'dev':
     
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
-else:
+#     DATABASES = {
+#         'default': {
+#             'ENGINE': 'django.db.backends.sqlite3',
+#             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#         }
+#     }
+# else:
    # Production -> DB 
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'OPTIONS': {
-            'read_default_file': '/etc/mysql/my.cnf',
-        },
-        }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'OPTIONS': {
+#         'read_default_file': '/etc/mysql/my.cnf',
+#     },
+#     }
+# }
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST': os.environ.get('DB_HOST'),
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
     }
+}
 
 
 # Password validation
