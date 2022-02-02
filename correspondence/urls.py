@@ -23,6 +23,11 @@ from django.conf import settings
 
 #signup -> removed signup view import
 
+# sentry
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -34,6 +39,7 @@ urlpatterns = [
     path('dashboard/', include('apps.userprofile.urls')),
     path('document/', include('apps.doc.urls')),
     path('notifications/', include('apps.notification.urls')),
+    path('sentry-debug/', trigger_error),
 
 ]
 
