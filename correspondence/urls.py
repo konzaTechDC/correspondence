@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views
 from apps.core.views import index
+
+from django.conf.urls.static import static
+from django.conf import settings
+
 #signup -> removed signup view import
 
 urlpatterns = [
@@ -32,3 +36,10 @@ urlpatterns = [
     path('notifications/', include('apps.notification.urls')),
 
 ]
+
+# append urlpatterns for media files to make them accessibel - on prod-> proxy server handls media files
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )

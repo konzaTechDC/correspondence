@@ -13,6 +13,7 @@ services:
       - 8000:8000
     volumes:
       - ./correspondence:/app
+      - ./data/web:/vol/web
     environment:
       - SECRET_KEY=+16a2x$b1$h1wv2tw#lcy-%wwvf*7b$j%vy-(-$qoc@gp@l7r6
       - DEBUG=1

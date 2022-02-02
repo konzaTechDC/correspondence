@@ -34,14 +34,14 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = bool(int(os.environ.get('DEBUG', 0))) 
 #env vars always stored as strings, 0=false, 1=true,convert into int -> bool
 #default to false
-ALLOWED_HOSTS = [] 
 # 'correspondence.konza.ke', '41.76.175.221'
+ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(
     filter(
-        None, 
-        os.environ.get('ALLOWED_HOST', '').split(','),
-        )
+        None,
+        os.environ.get('ALLOWED_HOSTS', '').split(','),
     )
+)
 # Application definition
 
 INSTALLED_APPS = [
@@ -170,11 +170,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# tells reverse proxy to handle anything precedeed with /static and send the rest to the app
 STATIC_URL = '/static/'
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# map static/meida root to volumes created to store static files on Docker file
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
 
 
 LOGIN_URL = 'login'
